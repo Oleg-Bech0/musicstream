@@ -1,0 +1,150 @@
+* {margin: 0; padding: 0; box-sizing: border-box;}
+body {height: 100vh; background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff; overflow: hidden; position: relative;}
+.vortex-background {position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.3;}
+/* Vortex CSS (from user's requested design) */
+/* vars */
+:root {
+	--vortex-diameter: 30rem;
+	--vortex-3d-perspective: 1000px;
+	--vortex-3d-perspective-origin: 50% 50%;
+	--vortex-element-width: 2.4rem;
+	--vortex-element-height: 1rem;
+	--vortex-font-family: 'Roboto Mono', monospace;
+	--vortex-font-color: rgba(255,255,255,0.9);
+	--vortex-font-size: 0.61rem;
+	--vortex-font-weight: 700;
+	--vortex-rotation-step-0: 0deg;
+	--vortex-rotation-step-1: 8deg;
+	--vortex-rotation-step-2: 16deg;
+	--vortex-rotation-step-3: 24deg;
+	--vortex-rotation-step-4: 32deg;
+	--vortex-rotation-y-start: 0deg;
+	--vortex-rotation-x-start: -90deg;
+	--vortex-rotation-y: var(--vortex-rotation-y-start);
+	--vortex-rotation-x: var(--vortex-rotation-x-start);
+	--vortex-scale-factor: 0.25;
+	--vortex-transition-duration: 1.5s;
+	--vortex-transition-timing-function: ease-out;
+	--vortex-animation-main-duration: 15s;
+	--vortex-animation-sub-duration: 1.5s;
+	--vortex-pi-factor: 3.14159;
+	--vortex-backface-visibility: hidden;
+	--vortex-text-translate-x-max: -96%;
+}
+
+@import url(//fonts.googleapis.com/css2?family=Roboto+Mono&display=swap);
+
+.vortex {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none; /* make background non-interactive by default */
+	z-index: 0;
+	mix-blend-mode: screen;
+	opacity: 0.9;
+}
+
+.vortex .vortex-wrapper {
+	--_diameter: var(--vortex-diameter);
+	--_radius: calc(var(--_diameter) * 0.5);
+	--_element-width: var(--vortex-element-width);
+	--_element-height: var(--vortex-element-height);
+	perspective: var(--vortex-3d-perspective);
+	perspective-origin: var(--vortex-3d-perspective-origin);
+	transform-style: preserve-3d;
+	width: var(--_diameter);
+	height: var(--_diameter);
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	transition-duration: var(--vortex-transition-duration);
+	transition-timing-function: var(--vortex-transition-timing-function);
+}
+
+.vortex-wrapper-rotation-y,
+.vortex-wrapper-rotation-x { width: inherit; height: inherit; perspective-origin: inherit; transform-style: inherit; }
+
+.vortex-wrapper-rotation-y { animation-name: vortex-animation-main-rotation-y; animation-duration: calc(var(--vortex-animation-main-duration) * var(--vortex-pi-factor)); transform: rotateY(var(--vortex-rotation-y)); }
+.vortex-wrapper-rotation-x { animation-name: vortex-animation-main-rotation-x; animation-duration: calc(var(--vortex-animation-main-duration) * calc(var(--vortex-pi-factor) * 2)); transform: rotateX(var(--vortex-rotation-x)); }
+
+@keyframes vortex-animation-main-rotation-y { 
+	0% { transform: rotateY(calc(calc(var(--vortex-rotation-step-4) * -1) + var(--vortex-rotation-y-start))); }
+	25% { transform: rotateY(var(--vortex-rotation-y-start)); }
+	50% { transform: rotateY(calc(var(--vortex-rotation-step-4) + var(--vortex-rotation-y-start))); }
+	75% { transform: rotateY(var(--vortex-rotation-y-start)); }
+	100% { transform: rotateY(calc(calc(var(--vortex-rotation-step-4) * -1) + var(--vortex-rotation-y-start))); }
+}
+@keyframes vortex-animation-main-rotation-x { 
+	0% { transform: rotateX(calc(calc(var(--vortex-rotation-step-4) * -1) + var(--vortex-rotation-x-start))); }
+	25% { transform: rotateX(var(--vortex-rotation-x-start)); }
+	50% { transform: rotateX(calc(var(--vortex-rotation-step-4) + var(--vortex-rotation-x-start))); }
+	75% { transform: rotateX(var(--vortex-rotation-x-start)); }
+	100% { transform: rotateX(calc(calc(var(--vortex-rotation-step-4) * -1) + var(--vortex-rotation-x-start))); }
+}
+
+.vortex-element { position: absolute; left: calc(var(--_radius) - var(--_element-width) * 0.5); top: calc(var(--_radius) - var(--_element-height) * 0.5); transform-style: inherit; width: var(--_element-width); height: var(--_element-height); }
+
+.vortex-sub-element{ position: absolute; left: 50%; top: 50%; transform-style: inherit; width: var(--_element-width); height: var(--_element-height); display:flex; align-items:center; justify-content:center; transform: rotateX(calc(var(--angle,0) + 90deg)) translateZ(calc(var(--_radius) * 0.7)) scaleX(1); }
+
+.vortex-sub-element > div > div { font-family: var(--vortex-font-family); color: var(--vortex-font-color); font-size: var(--vortex-font-size); font-weight: var(--vortex-font-weight); white-space: nowrap; }
+
+.vortex .vortex-controls-wrapper { position: absolute; width: 100%; height: 100%; display: grid; grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(9, 1fr); pointer-events: auto; }
+.vortex .vortex-controls-wrapper > div { width: 100%; height: 100%; }
+
+/* When hovering controls, stop animation to allow interactive rotation via CSS :has rules (rules included in user's CSS are large) */
+.vortex:has(.vortex-controls-wrapper > div:hover) .vortex-wrapper .vortex-wrapper-rotation-y,
+.vortex:has(.vortex-controls-wrapper > div:hover) .vortex-wrapper .vortex-wrapper-rotation-x { animation: none; }
+
+/* make page UI above vortex */
+.container { position: relative; z-index: 2; }
+
+.container {width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; z-index: 1;}
+.header {background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-shrink: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);}
+.logo h1 {font-size: 1.8rem; font-weight: 700; letter-spacing: -1px;}
+.search-box {flex: 1; max-width: 400px;}
+.search-box input {width: 100%; padding: 0.75rem 1.2rem; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; color: #fff; font-size: 1rem; transition: all 0.3s;}
+.search-box input::placeholder {color: rgba(255, 255, 255, 0.6);}
+.search-box input:focus {outline: none; background: rgba(255, 255, 255, 0.25); border-color: rgba(255, 255, 255, 0.6);}
+.header-icons {display: flex; gap: 1rem;}
+.icon-btn {background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 1.2rem; transition: all 0.3s;}
+.icon-btn:hover {background: rgba(255, 255, 255, 0.2); transform: scale(1.05);}
+.main-layout {display: flex; flex: 1; gap: 1.5rem; padding: 1.5rem; overflow: hidden;}
+.sidebar {width: 200px; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.5rem 0; overflow-y: auto; flex-shrink: 0;}
+.nav-menu {display: flex; flex-direction: column; gap: 0.5rem;}
+.nav-item {background: none; border: none; color: rgba(255, 255, 255, 0.7); padding: 0.75rem 1.5rem; text-align: left; cursor: pointer; font-size: 1rem; transition: all 0.3s; border-left: 3px solid transparent;}
+.nav-item:hover {color: #fff; background: rgba(255, 255, 255, 0.1);}
+.nav-item.active {color: #fff; background: rgba(255, 255, 255, 0.2); border-left-color: #fff;}
+.content {flex: 1; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column;}
+.content h2 {font-size: 2rem; margin-bottom: 1.5rem; font-weight: 700;}
+.track-grid {display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; flex: 1;}
+.track-card {background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 1rem; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; height: 100%;}
+.track-card:hover {background: rgba(255, 255, 255, 0.15); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.4);}
+.track-card-image {width: 100%; height: 150px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 1rem; color: #fff; background-size: cover;}
+.track-card-title {font-weight: 600; font-size: 1rem; margin-bottom: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.track-card-artist {color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.track-card-duration {color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; margin-top: auto; padding-top: 0.5rem;}
+.player {background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-shrink: 0; height: 120px;}
+.player-info {display: flex; align-items: center; gap: 1.5rem; min-width: 300px;}
+.album-art {width: 70px; height: 70px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;}
+.track-details {display: flex; flex-direction: column; overflow: hidden; flex: 1;}
+.track-title {font-weight: 600; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.track-artist {color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.player-controls {display: flex; align-items: center; gap: 1.5rem;}
+.player-btn {background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: all 0.3s;}
+.player-btn:hover {background: rgba(255, 255, 255, 0.2); transform: scale(1.1);}
+.play-btn {width: 55px; height: 55px; background: rgba(255, 255, 255, 0.3); font-size: 1.5rem;}
+.play-btn:hover {background: rgba(255, 255, 255, 0.4);}
+.player-progress {display: flex; align-items: center; gap: 0.75rem; flex: 1;}
+#currentTime, #duration {font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); min-width: 40px;}
+.progress-bar {flex: 1; height: 6px; background: rgba(255, 255, 255, 0.15); border-radius: 3px; position: relative; cursor: pointer;}
+.progress-fill {height: 100%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border-radius: 3px; width: 0%; transition: width 0.1s linear;}
+.progress-slider {position: absolute; top: -8px; left: 0; width: 100%; height: 22px; cursor: pointer; opacity: 0;}
+.player-volume {display: flex; align-items: center; gap: 0.75rem; min-width: 120px;}
+.volume-slider {width: 100px; height: 4px; background: rgba(255, 255, 255, 0.15); border-radius: 5px; cursor: pointer;}
+.volume-slider::-webkit-slider-thumb {width: 12px; height: 12px; border-radius: 50%; background: #fff; cursor: pointer; -webkit-appearance: none; appearance: none;}
+.volume-slider::-moz-range-thumb {width: 12px; height: 12px; border-radius: 50%; background: #fff; cursor: pointer; border: none;}
+::-webkit-scrollbar {width: 8px;}
+::-webkit-scrollbar-track {background: rgba(255, 255, 255, 0.05);}
+::-webkit-scrollbar-thumb {background: rgba(255, 255, 255, 0.2); border-radius: 4px;}
+::-webkit-scrollbar-thumb:hover {background: rgba(255, 255, 255, 0.3);}
